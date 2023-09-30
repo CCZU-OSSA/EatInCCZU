@@ -84,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 setState(() {
                   _body = home;
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -95,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 setState(() {
                   _body = const EatWhat();
+                  Navigator.pop(context);
                 });
               },
             ),
