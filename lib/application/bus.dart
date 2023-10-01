@@ -1,6 +1,7 @@
 import 'package:eat_in_cczu/application/config.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class ApplicationBus {
@@ -25,3 +26,9 @@ Logger logger({BuildContext? context}) {
 
 final GlobalKey<NavigatorState> globalApplicationKey =
     GlobalKey<NavigatorState>();
+
+Future<String> getAndroidPath() async {
+  return (await getExternalStorageDirectory() ??
+          await getApplicationSupportDirectory())
+      .path;
+}

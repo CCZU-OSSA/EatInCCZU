@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:eat_in_cczu/application/bus.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 Future<Logger> createLogger() async {
   return Logger(
@@ -11,7 +11,7 @@ Future<Logger> createLogger() async {
         FileOutput(
             overrideExisting: true,
             file: File(Platform.isAndroid
-                ? "${(await getApplicationCacheDirectory()).path}/latest.log"
+                ? "${await getAndroidPath()}/latest.log"
                 : "latest.log"))
       ]),
       printer: PrefixPrinter(SimplePrinter(colors: false)));

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
+import 'package:eat_in_cczu/application/bus.dart';
 
 class AppConfig {
   Map data = {};
@@ -62,10 +62,6 @@ class AppConfig {
 }
 
 Future<AppConfig> createConfig() async {
-  Directory? dir;
-  if (Platform.isAndroid) {
-    dir = await getExternalStorageDirectory();
-  }
   return AppConfig(
-      path: Platform.isAndroid ? "${dir?.path}/app.json" : "app.json");
+      path: Platform.isAndroid ? "${await getAndroidPath()}/app.json" : "app.json");
 }
