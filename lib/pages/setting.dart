@@ -19,7 +19,7 @@ class _SettingState extends State<Setting> {
           leading: Icon(Icons.display_settings),
           title: Text("UI设置", style: TextStyle(fontWeight: FontWeight.w700)),
           subtitle: Text("UI Settings",
-              style: TextStyle(fontWeight: FontWeight.w700)),
+              style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         const Divider(),
         ListTile(
@@ -57,9 +57,15 @@ class _SettingState extends State<Setting> {
           leading: Icon(Icons.info),
           title: Text("关于", style: TextStyle(fontWeight: FontWeight.w700)),
           subtitle:
-              Text("About", style: TextStyle(fontWeight: FontWeight.w700)),
+              Text("About", style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         const Divider(),
+        const ListTile(
+          leading: Icon(Icons.info),
+          title: Text("声明", style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: Text("本项目仅供娱乐学习使用",
+              style: TextStyle(fontWeight: FontWeight.w400)),
+        ),
         ListTile(
             leading: const Icon(Icons.code),
             title: const Text("项目开源地址",
@@ -67,7 +73,39 @@ class _SettingState extends State<Setting> {
             subtitle: const Text("https://github.com/H2Sxxa/EatInCCZU",
                 style: TextStyle(fontWeight: FontWeight.w400)),
             onTap: () => launchUrlString("https://github.com/H2Sxxa/EatInCCZU",
-                mode: LaunchMode.externalApplication))
+                mode: LaunchMode.externalApplication)),
+        ListTile(
+          leading: const Icon(Icons.comment),
+          title: const Text("提出建议/反馈问题",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) => SimpleDialog(
+                      children: [
+                        ListTile(
+                          leading: Image.asset(
+                            "resource/images/github.png",
+                            width: 25,
+                          ),
+                          title: const Text("Github Issues",
+                              style: TextStyle(fontWeight: FontWeight.w500)),
+                          onTap: () => launchUrlString(
+                              "https://github.com/H2Sxxa/EatInCCZU/issues",
+                              mode: LaunchMode.externalApplication),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.email),
+                          title: const Text("Email",
+                              style: TextStyle(fontWeight: FontWeight.w500)),
+                          onTap: () => launchUrlString(
+                              "mailto:h2sxxa0w0@gmail.com",
+                              mode: LaunchMode.externalApplication),
+                        )
+                      ],
+                    ));
+          },
+        )
       ],
     );
   }

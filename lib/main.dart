@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eat_in_cczu/application/bus.dart';
 import 'package:eat_in_cczu/application/config.dart';
@@ -12,6 +15,13 @@ import 'package:provider/provider.dart';
 void main() async {
   Logger.level = Level.all;
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows) {
+    if (await File("winfont").exists()) {
+      await loadFontFromList(await File("winfont").readAsBytes(),
+          fontFamily: "winfont");
+    }
+  }
+
   runApp(Provider<ApplicationBus>.value(
     value: ApplicationBus(await createConfig(), await createLogger()),
     child: const MyApp(),
@@ -28,15 +38,15 @@ class MyApp extends StatelessWidget {
         navigatorKey: globalApplicationKey,
         title: 'CCZU今天吃什么',
         theme: ThemeData(
-          colorScheme: lightColorScheme ??
-              ColorScheme.fromSeed(seedColor: Colors.pink.shade200),
-          useMaterial3: true,
-        ),
+            colorScheme: lightColorScheme ??
+                ColorScheme.fromSeed(seedColor: Colors.pink.shade200),
+            useMaterial3: true,
+            fontFamily: Platform.isWindows ? "winfont" : ""),
         darkTheme: ThemeData(
-          colorScheme: darkColorScheme ??
-              ColorScheme.fromSeed(seedColor: Colors.pink.shade700),
-          useMaterial3: true,
-        ),
+            colorScheme: darkColorScheme ??
+                ColorScheme.fromSeed(seedColor: Colors.pink.shade700),
+            useMaterial3: true,
+            fontFamily: Platform.isWindows ? "winfont" : ""),
         themeMode: ThemeMode.system,
         home: const MyHomePage(),
       );
