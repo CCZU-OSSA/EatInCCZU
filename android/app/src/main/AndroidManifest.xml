@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="eat_in_cczu"
+        android:label="CCZU今天吃什么"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

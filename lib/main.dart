@@ -1,8 +1,8 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eat_in_cczu/pages/eat.dart';
+import 'package:eat_in_cczu/pages/markdown.dart';
+import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -27,16 +27,14 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         themeMode: ThemeMode.system,
-        home: const MyHomePage(title: '🏠Home'),
+        home: const MyHomePage(),
       );
     });
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -44,27 +42,49 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Widget? _body;
+  String? _title;
+
+  var home = ListView(
+    children: [
+      const Card(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 20,
+              ),
+              Icon(Icons.info),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                  child: Text(
+                "本应用的开发与CCZU，即常州大学官方没有任何直接关系。本应用不会主动联网，无需担心泄漏你的个人信息。请勿到任何无关场所提及本应用",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              )),
+              SizedBox(
+                width: 20,
+              ),
+            ],
+          ),
+        ),
+      ),
+      asyncMarkdownBody("resource/text/home.md")
+    ],
+  );
+
+  void pushPage(BuildContext context, Widget page, String title) {
+    setState(() {
+      _body = page;
+      _title = title;
+      Navigator.pop(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var home = ListView(
-      children: [
-        Card(
-          child: FutureBuilder(
-            future: rootBundle.loadString("resource/text/home.md"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return MarkdownBody(data: snapshot.data!);
-              } else {
-                return const Center(
-                  child: Text("loading"),
-                );
-              }
-            },
-          ),
-        )
-      ],
-    );
     return Scaffold(
         drawer: Drawer(
             child: ListView(
@@ -78,28 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30)),
             ),
             ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("主页",
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-              onTap: () {
-                setState(() {
-                  _body = home;
-                  Navigator.pop(context);
-                });
-              },
-            ),
+                leading: const Icon(Icons.home),
+                title: const Text("主页",
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                onTap: () => pushPage(context, home, "🏠Home")),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.food_bank),
-              title: const Text("吃什么",
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-              onTap: () {
-                setState(() {
-                  _body = const EatWhat();
-                  Navigator.pop(context);
-                });
-              },
-            ),
+                leading: const Icon(Icons.food_bank),
+                title: const Text("吃什么",
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                onTap: () => pushPage(context, const EatWhat(), "😋EatWhat")),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text("个人",
@@ -111,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.settings),
               title: const Text("设置",
                   style: TextStyle(fontWeight: FontWeight.w700)),
-              onTap: () {},
+              onTap: () => pushPage(context, const Setting(), "🔧Settings"),
             ),
           ],
         )),
@@ -119,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(
-            widget.title,
+            _title ?? "🏠Home",
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
         ));

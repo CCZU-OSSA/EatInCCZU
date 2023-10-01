@@ -13,6 +13,6 @@ class EatWhat extends StatefulWidget {
 class _EatWhatState extends State<EatWhat> {
   @override
   Widget build(BuildContext context) {
-    return const MarkdownBody(data: "# hello");
+    return const Markdown(data: "# hello",shrinkWrap: false,);
   }
 }
