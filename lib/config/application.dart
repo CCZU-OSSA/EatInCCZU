@@ -11,6 +11,9 @@ class AppConfig {
       this.data = data;
     }
     if (path != null) {
+      if (!File(path!).existsSync()) {
+        File(path!).writeAsStringSync("{}");
+      }
       this.data = jsonDecode(File(path!).readAsStringSync());
     }
   }
@@ -61,13 +64,13 @@ class AppConfig {
 AppConfig? globalConfig;
 
 Future<AppConfig> getOrCreateConfig() async {
-  Directory dir = Directory("");
+  Directory? dir;
   if (Platform.isAndroid) {
-    dir = await getExternalStorageDirectory() ??
-        await getApplicationSupportDirectory();
+    dir = await getExternalStorageDirectory();
   }
   return globalConfig ??
-      AppConfig(path: Platform.isAndroid ? "${dir.path}/app.json" : "app.json");
+      AppConfig(
+          path: Platform.isAndroid ? "${dir?.path}/app.json" : "app.json");
 }
 
 Future<void> initConfig() async {
