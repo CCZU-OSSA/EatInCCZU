@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   Logger.level = Level.all;
-
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(Provider<ApplicationBus>.value(
     value: ApplicationBus(await createConfig(), await createLogger()),
     child: const MyApp(),

@@ -28,9 +28,7 @@ final GlobalKey<NavigatorState> globalApplicationKey =
     GlobalKey<NavigatorState>();
 
 Future<String> getAndroidPath() async {
-  try {
-    return (await getExternalStorageDirectory())!.path;
-  } catch (exc) {
-    return (await getApplicationSupportDirectory()).path;
-  }
+  return (await getExternalStorageDirectory() ??
+          await getApplicationSupportDirectory())
+      .path;
 }
