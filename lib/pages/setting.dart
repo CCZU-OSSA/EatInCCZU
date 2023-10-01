@@ -1,4 +1,3 @@
-import 'package:eat_in_cczu/config/application.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -6,12 +5,11 @@ class Setting extends StatefulWidget {
   const Setting({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _SettingState();
-  }
+  State<StatefulWidget> createState() => _SettingState();
 }
 
-double _tv = getConfigAftInit().getOrWrite("font_scale", 1.0);
+//double _tv = getConfigAftInit().getOrWrite("font_scale", 1.0);
+double _tv = 1.0;
 
 class _SettingState extends State<Setting> {
   @override
@@ -50,7 +48,7 @@ class _SettingState extends State<Setting> {
                         onChanged: (v) {
                           setState(() {
                             _tv = double.parse(v.toStringAsPrecision(2));
-                            getConfigAftInit().writeKey("font_scale", _tv);
+                            // getConfigAftInit().writeKey("font_scale", _tv);
                           });
                         }))
               ])),
