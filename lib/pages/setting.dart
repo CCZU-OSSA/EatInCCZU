@@ -60,12 +60,6 @@ class _SettingState extends State<Setting> {
               Text("About", style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         const Divider(),
-        const ListTile(
-          leading: Icon(Icons.info),
-          title: Text("声明", style: TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: Text("本项目仅供娱乐学习使用",
-              style: TextStyle(fontWeight: FontWeight.w400)),
-        ),
         ListTile(
             leading: const Icon(Icons.code),
             title: const Text("项目开源地址",

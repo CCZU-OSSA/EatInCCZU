@@ -30,7 +30,7 @@ class AppConfig {
     return data[key];
   }
 
-  dynamic getElse(String key, dynamic fallback, {bool issync = false}) {
+  V getElse<V>(String key, V fallback, {bool issync = false}) {
     syncFromPath(issync: issync);
     return data.containsKey(key) ? get(key) : fallback;
   }
@@ -40,7 +40,7 @@ class AppConfig {
     return data.containsKey(key);
   }
 
-  dynamic getOrWrite(String key, dynamic fallback, {bool issync = false}) {
+  V getOrWrite<V>(String key, V fallback, {bool issync = false}) {
     if (containsKey(key, issync: issync)) {
       return get(key);
     } else {
@@ -48,13 +48,13 @@ class AppConfig {
     }
   }
 
-  dynamic writeKey(String key, dynamic value) async {
+  Future<V> writeKey<V>(String key, V value) async {
     data[key] = value;
     await File(path!).writeAsString(jsonEncode(data));
     return value;
   }
 
-  dynamic writeKeySync(String key, dynamic value) {
+  V writeKeySync<V>(String key, V value) {
     data[key] = value;
     File(path!).writeAsStringSync(jsonEncode(data));
     return value;
@@ -63,5 +63,7 @@ class AppConfig {
 
 Future<AppConfig> createConfig() async {
   return AppConfig(
-      path: Platform.isAndroid ? "${await getAndroidPath()}/app.json" : "app.json");
+      path: Platform.isAndroid
+          ? "${await getAndroidPath()}/app.json"
+          : "app.json");
 }
