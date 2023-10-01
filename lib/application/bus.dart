@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:eat_in_cczu/application/config.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path_provider_android/path_provider_android.dart';
 import 'package:provider/provider.dart';
 
 class ApplicationBus {
@@ -31,8 +28,9 @@ final GlobalKey<NavigatorState> globalApplicationKey =
     GlobalKey<NavigatorState>();
 
 Future<String> getAndroidPath() async {
-  if (Platform.isAndroid) PathProviderAndroid.registerWith();
-  return (await getExternalStorageDirectory() ??
-          await getApplicationSupportDirectory())
-      .path;
+  try {
+    return (await getExternalStorageDirectory())!.path;
+  } catch (exc) {
+    return (await getApplicationSupportDirectory()).path;
+  }
 }
