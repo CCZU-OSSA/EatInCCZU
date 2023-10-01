@@ -61,11 +61,13 @@ class AppConfig {
 AppConfig? globalConfig;
 
 Future<AppConfig> getOrCreateConfig() async {
+  Directory dir = Directory("");
+  if (Platform.isAndroid) {
+    dir = await getExternalStorageDirectory() ??
+        await getApplicationSupportDirectory();
+  }
   return globalConfig ??
-      AppConfig(
-          path: Platform.isAndroid
-              ? "${(await getApplicationSupportDirectory()).path}/app.json"
-              : "app.json");
+      AppConfig(path: Platform.isAndroid ? "${dir.path}/app.json" : "app.json");
 }
 
 Future<void> initConfig() async {

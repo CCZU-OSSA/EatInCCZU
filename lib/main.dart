@@ -5,9 +5,8 @@ import 'package:eat_in_cczu/pages/markdown.dart';
 import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
-  await initConfig();
-  runApp(const MyApp());
+void main() {
+  initConfig().whenComplete(() => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
