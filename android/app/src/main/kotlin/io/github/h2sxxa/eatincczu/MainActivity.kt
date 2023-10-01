@@ -1,4 +1,4 @@
-package com.example.eat_in_cczu
+package io.github.h2sxxa.eatincczu
 
 import io.flutter.embedding.android.FlutterActivity
 

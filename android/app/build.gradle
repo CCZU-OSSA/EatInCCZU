@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.example.eat_in_cczu"
+    namespace "io.github.h2sxxa.eatincczu"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

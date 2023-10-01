@@ -1,12 +1,18 @@
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eat_in_cczu/config/application.dart';
+import 'package:eat_in_cczu/application/config.dart';
+import 'package:eat_in_cczu/application/log.dart';
 import 'package:eat_in_cczu/pages/eat.dart';
 import 'package:eat_in_cczu/pages/markdown.dart';
 import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 void main() {
-  initConfig().whenComplete(() => runApp(const MyApp()));
+  Logger.level = Level.all;
+  initLogger().whenComplete(() {
+    getLoggerAftInit().i("EIC Application Bootstrap");
+    initConfig().whenComplete(() => runApp(const MyApp()));
+  });
 }
 
 class MyApp extends StatelessWidget {
