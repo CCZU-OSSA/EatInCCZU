@@ -64,7 +64,7 @@ Future<AppConfig> getOrCreateConfig() async {
   return globalConfig ??
       AppConfig(
           path: Platform.isAndroid
-              ? "${await getApplicationSupportDirectory()}/app.json"
+              ? "${(await getApplicationSupportDirectory()).path}/app.json"
               : "app.json");
 }
 
