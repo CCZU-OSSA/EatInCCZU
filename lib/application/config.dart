@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eat_in_cczu/application/log.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppConfig {
@@ -62,23 +61,11 @@ class AppConfig {
   }
 }
 
-AppConfig? globalConfig;
-
-Future<AppConfig> getOrCreateConfig() async {
+Future<AppConfig> createConfig() async {
   Directory? dir;
   if (Platform.isAndroid) {
     dir = await getExternalStorageDirectory();
-    getLoggerAftInit().i("will get config from ${dir?.path}/app.json");
   }
-  return globalConfig ??
-      AppConfig(
-          path: Platform.isAndroid ? "${dir?.path}/app.json" : "app.json");
-}
-
-Future<void> initConfig() async {
-  globalConfig = await getOrCreateConfig();
-}
-
-AppConfig getConfigAftInit() {
-  return globalConfig!;
+  return AppConfig(
+      path: Platform.isAndroid ? "${dir?.path}/app.json" : "app.json");
 }

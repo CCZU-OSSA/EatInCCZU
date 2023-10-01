@@ -1,4 +1,5 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eat_in_cczu/application/bus.dart';
 import 'package:eat_in_cczu/application/config.dart';
 import 'package:eat_in_cczu/application/log.dart';
 import 'package:eat_in_cczu/pages/eat.dart';
@@ -6,13 +7,15 @@ import 'package:eat_in_cczu/pages/markdown.dart';
 import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   Logger.level = Level.all;
-  initLogger().whenComplete(() {
-    getLoggerAftInit().i("EIC Application Bootstrap");
-    initConfig().whenComplete(() => runApp(const MyApp()));
-  });
+
+  runApp(Provider<ApplicationBus>.value(
+    value: ApplicationBus(await createConfig(), await createLogger()),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,6 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
+        navigatorKey: globalApplicationKey,
         title: 'CCZU今天吃什么',
         theme: ThemeData(
           colorScheme: lightColorScheme ??
@@ -87,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _body = page;
       _title = title;
       Navigator.pop(context);
+      logger().i("goto $_title");
     });
   }
 

@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
-Logger? globalLogger;
-
-Future<void> initLogger() async {
-  globalLogger = Logger(
+Future<Logger> createLogger() async {
+  return Logger(
       filter: ProductionFilter(),
       output: MultiOutput([
         ConsoleOutput(),
@@ -17,8 +15,4 @@ Future<void> initLogger() async {
                 : "latest.log"))
       ]),
       printer: PrefixPrinter(SimplePrinter(colors: false)));
-}
-
-Logger getLoggerAftInit() {
-  return globalLogger!;
 }

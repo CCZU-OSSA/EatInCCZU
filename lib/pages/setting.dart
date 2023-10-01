@@ -1,4 +1,4 @@
-import 'package:eat_in_cczu/application/config.dart';
+import 'package:eat_in_cczu/application/bus.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -9,11 +9,10 @@ class Setting extends StatefulWidget {
   State<StatefulWidget> createState() => _SettingState();
 }
 
-double _tv = getConfigAftInit().getOrWrite("font_scale", 1.0);
-
 class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
+    double tv = config(context: context).getOrWrite("font_scale", 1.0);
     return ListView(
       children: [
         const ListTile(
@@ -38,21 +37,21 @@ class _SettingState extends State<Setting> {
                     left: -20,
                     right: 0,
                     child: Slider(
-                        value: _tv,
+                        value: tv,
                         max: 3,
                         min: 0.1,
                         divisions: 29,
                         overlayColor: MaterialStateColor.resolveWith(
                             (states) => Colors.transparent),
-                        label: "$_tv",
+                        label: "$tv",
                         onChanged: (v) {
                           setState(() {
-                            _tv = double.parse(v.toStringAsPrecision(2));
-                            getConfigAftInit().writeKey("font_scale", _tv);
+                            tv = double.parse(v.toStringAsPrecision(2));
+                            config(context: context).writeKey("font_scale", tv);
                           });
                         }))
               ])),
-          trailing: Text("$_tv"),
+          trailing: Text("$tv"),
         ),
         const ListTile(
           leading: Icon(Icons.info),
