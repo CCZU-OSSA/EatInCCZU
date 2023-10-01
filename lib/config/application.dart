@@ -1,36 +1,77 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path_provider/path_provider.dart';
+
 class AppConfig {
-  Map? data;
+  Map data = {};
   String? path;
-  AppConfig({this.data, this.path, String? strData}) {
-    data ??= jsonDecode(strData ?? "{}");
+  AppConfig({Map? data, this.path}) {
+    if (data != null) {
+      this.data = data;
+    }
+    if (path != null) {
+      this.data = jsonDecode(File(path!).readAsStringSync());
+    }
   }
 
-  void syncFromPath() async {
-    if (path == null) {
+  void syncFromPath({bool issync = true}) {
+    if (path == null || !issync) {
       return;
     }
-    data = jsonDecode(await File(path!).readAsString());
+    data = jsonDecode(File(path!).readAsStringSync());
   }
 
-  dynamic get(String key) {
-    return data![key];
+  dynamic get(String key, {bool issync = false}) {
+    syncFromPath(issync: issync);
+    return data[key];
   }
 
-  dynamic getElse(String key, dynamic fallback) {
-    return data!.containsKey(key) ? get(key) : fallback;
+  dynamic getElse(String key, dynamic fallback, {bool issync = false}) {
+    syncFromPath(issync: issync);
+    return data.containsKey(key) ? get(key) : fallback;
   }
 
-  void writeKey(String key, dynamic value) async {
-    data![key] = value;
-    await File(path!).writeAsString(jsonEncode(data!));
+  bool containsKey(String key, {bool issync = false}) {
+    syncFromPath(issync: issync);
+    return data.containsKey(key);
+  }
+
+  dynamic getOrWrite(String key, dynamic fallback, {bool issync = false}) {
+    if (containsKey(key, issync: issync)) {
+      return get(key);
+    } else {
+      return writeKeySync(key, fallback);
+    }
+  }
+
+  dynamic writeKey(String key, dynamic value) async {
+    data[key] = value;
+    await File(path!).writeAsString(jsonEncode(data));
+    return value;
+  }
+
+  dynamic writeKeySync(String key, dynamic value) {
+    data[key] = value;
+    File(path!).writeAsStringSync(jsonEncode(data));
+    return value;
   }
 }
 
 AppConfig? globalConfig;
 
-AppConfig getOrCreateConfig() {
-  return globalConfig ?? AppConfig(path: "app.json");
+Future<AppConfig> getOrCreateConfig() async {
+  return globalConfig ??
+      AppConfig(
+          path: Platform.isAndroid
+              ? "${await getApplicationSupportDirectory()}/app.json"
+              : "app.json");
+}
+
+Future<void> initConfig() async {
+  globalConfig = await getOrCreateConfig();
+}
+
+AppConfig getConfigAftInit() {
+  return globalConfig!;
 }

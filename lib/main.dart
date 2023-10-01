@@ -1,10 +1,12 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eat_in_cczu/config/application.dart';
 import 'package:eat_in_cczu/pages/eat.dart';
 import 'package:eat_in_cczu/pages/markdown.dart';
 import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
+  await initConfig();
   runApp(const MyApp());
 }
 
