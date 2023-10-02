@@ -96,13 +96,13 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   );
   final routes = {
-    "/home": (context) => home,
+    "/": (context) => home,
     "/settings": (context, cb) => Setting(callback: cb),
     "/eatwhat": (context) => const EatWhat(),
     "/personal": (context) => const Personal()
   };
 
-  final GlobalKey _navigatorKey = GlobalKey();
+  final _navigatorKey = GlobalKey<NavigatorState>();
   void callbackSetState() {
     setState(() {});
   }
@@ -111,17 +111,16 @@ class _MyHomePageState extends State<MyHomePage> {
       {bool ispop = true}) {
     setState(() {
       _title = title;
+      _navigatorKey.currentState?.pushNamed(name);
       if (ispop) {
         Navigator.of(context).pop(context);
       }
-      Navigator.of(_navigatorKey.currentContext!).pushNamed(name);
-
       logger().i("goto $_title");
     });
   }
 
   void pushIndex(BuildContext context, int index, {bool ispop = true}) => [
-        () => pushPage(context, "/home", "🏠Home", ispop: ispop),
+        () => pushPage(context, "/", "🏠Home", ispop: ispop),
         () => pushPage(context, "/eatwhat", "😋EatWhat", ispop: ispop),
         () => pushPage(context, "/personal", "🧑‍🎓Personal", ispop: ispop),
         () => pushPage(context, "/settings", "🔧Settings", ispop: ispop)
@@ -187,14 +186,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 : null,
         body: Navigator(
             key: _navigatorKey,
-            initialRoute: "/home",
-            onGenerateRoute: (settings) => settings.name == "/settings"
-                ? MaterialPageRoute(
-                    builder: (context) => routes[settings.name ?? "/home"]!(
-                        context, callbackSetState))
-                : MaterialPageRoute(
-                    builder: (context) =>
-                        routes[settings.name ?? "/home"]!(context))),
+            initialRoute: "/",
+            onGenerateRoute: (settings) {
+              return settings.name == "/settings"
+                  ? MaterialPageRoute(
+                      builder: (context) =>
+                          routes[settings.name]!(context, callbackSetState))
+                  : MaterialPageRoute(
+                      builder: (context) => routes[settings.name]!(context));
+            }),
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(
