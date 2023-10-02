@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eat_in_cczu/application/bus.dart';
-import 'package:eat_in_cczu/application/config.dart';
-import 'package:eat_in_cczu/application/log.dart';
-import 'package:eat_in_cczu/pages/eatwhat.dart';
-import 'package:eat_in_cczu/pages/personal.dart';
-import 'package:eat_in_cczu/pages/widgets/markdown.dart';
-import 'package:eat_in_cczu/pages/setting.dart';
+import 'package:eatincczu/application/bus.dart';
+import 'package:eatincczu/application/config.dart';
+import 'package:eatincczu/application/log.dart';
+import 'package:eatincczu/pages/eatwhat.dart';
+import 'package:eatincczu/pages/personal.dart';
+import 'package:eatincczu/pages/widgets/markdown.dart';
+import 'package:eatincczu/pages/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
-        navigatorKey: globalApplicationKey,
+        key: globalApplicationKey,
         title: 'CCZU今天吃什么',
         theme: ThemeData(
             colorScheme: lightColorScheme ??
@@ -63,8 +63,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String? _title;
-
+  String _title = "🏠主页";
+  int _bottomindex = 0;
   static ListView home = ListView(
     children: [
       const Card(
@@ -132,12 +132,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void pushIndex(BuildContext context, int index, {bool ispop = true}) => [
-        () => pushPage(context, "/", "🏠Home", ispop: ispop),
-        () => pushPage(context, "/eatwhat", "😋EatWhat", ispop: ispop),
-        () => pushPage(context, "/personal", "🧑‍🎓Personal", ispop: ispop),
-        () => pushPage(context, "/settings", "🔧Settings", ispop: ispop)
-      ][index]();
+  void pushIndex(BuildContext context, int index, {bool ispop = true}) {
+    _bottomindex = index;
+    [
+      () => pushPage(context, "/", "🏠主页", ispop: ispop),
+      () => pushPage(context, "/eatwhat", "😋开饭", ispop: ispop),
+      () => pushPage(context, "/personal", "🧑‍🎓个人", ispop: ispop),
+      () => pushPage(context, "/settings", "🔧设置", ispop: ispop)
+    ][index]();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Divider(),
             ListTile(
                 leading: const Icon(Icons.restaurant),
-                title: const Text("吃什么",
+                title: const Text("开饭",
                     style: TextStyle(fontWeight: FontWeight.w700)),
                 onTap: () => pushIndex(context, 1)),
             ListTile(
@@ -178,25 +181,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: () => pushIndex(context, 3)),
           ],
         )),
-        bottomNavigationBar:
-            config(context: context).getElse("bottom_route", false)
-                ? BottomNavigationBar(
-                    type: BottomNavigationBarType.fixed,
-                    items: const [
-                      BottomNavigationBarItem(
-                          label: "Home", icon: Icon(Icons.home)),
-                      BottomNavigationBarItem(
-                          label: "EatWhat", icon: Icon(Icons.restaurant)),
-                      BottomNavigationBarItem(
-                          label: "Personal", icon: Icon(Icons.person)),
-                      BottomNavigationBarItem(
-                        label: "Settings",
-                        icon: Icon(Icons.settings),
-                      )
-                    ],
-                    onTap: (value) => pushIndex(context, value, ispop: false),
+        bottomNavigationBar: config(context: context)
+                .getElse("bottom_route", false)
+            ? BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                currentIndex: _bottomindex,
+                items: const [
+                  BottomNavigationBarItem(label: "主页", icon: Icon(Icons.home)),
+                  BottomNavigationBarItem(
+                      label: "开饭", icon: Icon(Icons.restaurant)),
+                  BottomNavigationBarItem(
+                      label: "个人", icon: Icon(Icons.person)),
+                  BottomNavigationBarItem(
+                    label: "设置",
+                    icon: Icon(Icons.settings),
                   )
-                : null,
+                ],
+                onTap: (value) => pushIndex(context, value, ispop: false),
+              )
+            : null,
         body: Navigator(
             key: _navigatorKey,
             initialRoute: "/",
@@ -211,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(
-            _title ?? "🏠Home",
+            _title,
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
         ));

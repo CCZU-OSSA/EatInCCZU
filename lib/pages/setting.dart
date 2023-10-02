@@ -1,4 +1,4 @@
-import 'package:eat_in_cczu/application/bus.dart';
+import 'package:eatincczu/application/bus.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -94,6 +94,8 @@ class _SettingState extends State<Setting> {
             showDialog(
                 context: context,
                 builder: (context) => SimpleDialog(
+                      title: const Text("提出建议/反馈问题",
+                          style: TextStyle(fontWeight: FontWeight.w700)),
                       children: [
                         ListTile(
                           leading: Image.asset(

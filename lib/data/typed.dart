@@ -21,18 +21,15 @@ class Eatery extends JsonSerializable {
   String location;
   String name;
   String description;
+  String? image;
   List<Dish>? dishes;
-  List<String>? images;
 
   Eatery(
       {this.location = "Unknown",
       this.name = "Unknown",
       this.description = "Unknown",
       this.dishes,
-      this.images}) {
-    dishes ??= [];
-    images ??= [];
-  }
+      this.image});
 
   @override
   Map<String, dynamic> toMap() {
@@ -44,7 +41,7 @@ class Eatery extends JsonSerializable {
         name: map["name"],
         location: map["location"],
         description: map["description"],
-        images: map["images"],
+        image: map["images"],
         dishes: List.generate((map["dishes"] as List).length,
             (index) => Dish.fromMap(map["dishes"][index])));
   }
@@ -59,30 +56,28 @@ class Eatery extends JsonSerializable {
 ///   "name": "dish_0",
 ///   "price": "14.0",
 ///   "description":"",
-///   "images":[]
+///   "image":""
 /// }
 /// ```
 class Dish extends JsonSerializable {
   String name;
   double price;
   String description;
-  List<String>? images;
+  String? image;
 
   Dish(
       {this.name = "Unknown",
       this.description = "Unknown",
       this.price = -1,
-      this.images}) {
-    images ??= [];
-  }
+      this.image});
 
   @override
   Map<String, dynamic> toMap() {
-    return {"name": name, "price": price, "images": images};
+    return {"name": name, "price": price, "image": image};
   }
 
   static Dish fromMap(Map<String, dynamic> map) {
-    return Dish(name: map["name"], price: map["price"], images: map["images"]);
+    return Dish(name: map["name"], price: map["price"], image: map["images"]);
   }
 
   static Dish fromString(String data) {

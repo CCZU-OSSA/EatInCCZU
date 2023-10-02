@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eat_in_cczu/application/bus.dart';
+import 'package:eatincczu/application/bus.dart';
 import 'package:logger/logger.dart';
 
 Future<Logger> createLogger() async {

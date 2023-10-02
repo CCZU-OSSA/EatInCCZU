@@ -1,4 +1,4 @@
-# eat_in_cczu
+# eatincczu
 
 A new Flutter project.
 

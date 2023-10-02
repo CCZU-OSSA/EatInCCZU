@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eat_in_cczu/application/bus.dart';
+import 'package:eatincczu/application/bus.dart';
 
 class AppConfig {
   Map data = {};

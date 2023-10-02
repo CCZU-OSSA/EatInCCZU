@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class EatWhat extends StatefulWidget {
   const EatWhat({super.key});
@@ -11,8 +10,37 @@ class EatWhat extends StatefulWidget {
 }
 
 class _EatWhatState extends State<EatWhat> {
+
   @override
   Widget build(BuildContext context) {
-    return const Markdown(data: "# hello",shrinkWrap: false,);
+    return SingleChildScrollView(
+      child: Column(children: [
+        Center(
+            child: Card(
+                child: SizedBox(
+          height: 300,
+          width: 300,
+          child: Image.asset(
+            "resource/images/mystia.png",
+            width: 300,
+            height: 300,
+          ),
+        ))),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FilledButton(
+                onPressed: () {},
+                child: const Text(
+                  "上份菜❤",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ))
+          ],
+        )
+      ]),
+    );
   }
 }

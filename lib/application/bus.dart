@@ -1,4 +1,5 @@
-import 'package:eat_in_cczu/application/config.dart';
+
+import 'package:eatincczu/application/config.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 class ApplicationBus {
   AppConfig config;
   Logger logger;
+
   ApplicationBus(this.config, this.logger);
   Map<String, dynamic> holder = {};
   void updateToHolder(String key, dynamic value) {
@@ -21,19 +23,21 @@ class ApplicationBus {
 
 AppConfig config({BuildContext? context}) {
   return Provider.of<ApplicationBus>(
-          context ?? globalApplicationKey.currentState!.overlay!.context,
+          context ?? globalApplicationKey.currentContext!,
           listen: false)
       .config;
 }
 
 Logger logger({BuildContext? context}) {
   return Provider.of<ApplicationBus>(
-          context ?? globalApplicationKey.currentState!.overlay!.context,
+          context ?? globalApplicationKey.currentContext!,
           listen: false)
       .logger;
 }
 
-final GlobalKey<NavigatorState> globalApplicationKey =
+final GlobalKey globalApplicationKey = GlobalKey();
+
+final GlobalKey<NavigatorState> globalNavigatorKey =
     GlobalKey<NavigatorState>();
 
 Future<String> getAndroidPath() async {
