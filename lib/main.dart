@@ -6,6 +6,7 @@ import 'package:eat_in_cczu/application/bus.dart';
 import 'package:eat_in_cczu/application/config.dart';
 import 'package:eat_in_cczu/application/log.dart';
 import 'package:eat_in_cczu/pages/eatwhat.dart';
+import 'package:eat_in_cczu/pages/personal.dart';
 import 'package:eat_in_cczu/pages/widgets/markdown.dart';
 import 'package:eat_in_cczu/pages/setting.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +63,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget? _body;
   String? _title;
 
-  var home = ListView(
+  static ListView home = ListView(
     children: [
       const Card(
         child: Center(
@@ -95,15 +95,37 @@ class _MyHomePageState extends State<MyHomePage> {
       asyncMarkdownBody("resource/text/home.md")
     ],
   );
+  final routes = {
+    "/home": (context) => home,
+    "/settings": (context, cb) => Setting(callback: cb),
+    "/eatwhat": (context) => const EatWhat(),
+    "/personal": (context) => const Personal()
+  };
 
-  void pushPage(BuildContext context, Widget page, String title) {
+  final GlobalKey _navigatorKey = GlobalKey();
+  void callbackSetState() {
+    setState(() {});
+  }
+
+  void pushPage(BuildContext context, String name, String title,
+      {bool ispop = true}) {
     setState(() {
-      _body = page;
       _title = title;
-      Navigator.pop(context);
+      if (ispop) {
+        Navigator.of(context).pop(context);
+      }
+      Navigator.of(_navigatorKey.currentContext!).pushNamed(name);
+
       logger().i("goto $_title");
     });
   }
+
+  void pushIndex(BuildContext context, int index, {bool ispop = true}) => [
+        () => pushPage(context, "/home", "🏠Home", ispop: ispop),
+        () => pushPage(context, "/eatwhat", "😋EatWhat", ispop: ispop),
+        () => pushPage(context, "/personal", "🧑‍🎓Personal", ispop: ispop),
+        () => pushPage(context, "/settings", "🔧Settings", ispop: ispop)
+      ][index]();
 
   @override
   Widget build(BuildContext context) {
@@ -123,29 +145,56 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: const Icon(Icons.home),
                 title: const Text("主页",
                     style: TextStyle(fontWeight: FontWeight.w700)),
-                onTap: () => pushPage(context, home, "🏠Home")),
+                onTap: () => pushIndex(context, 0)),
             const Divider(),
             ListTile(
-                leading: const Icon(Icons.food_bank),
+                leading: const Icon(Icons.restaurant),
                 title: const Text("吃什么",
                     style: TextStyle(fontWeight: FontWeight.w700)),
-                onTap: () => pushPage(context, const EatWhat(), "😋EatWhat")),
+                onTap: () => pushIndex(context, 1)),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text("个人",
                   style: TextStyle(fontWeight: FontWeight.w700)),
-              onTap: () {},
+              onTap: () => pushIndex(context, 2),
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text("设置",
-                  style: TextStyle(fontWeight: FontWeight.w700)),
-              onTap: () => pushPage(context, const Setting(), "🔧Settings"),
-            ),
+                leading: const Icon(Icons.settings),
+                title: const Text("设置",
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                onTap: () => pushIndex(context, 3)),
           ],
         )),
-        body: _body ?? home,
+        bottomNavigationBar:
+            config(context: context).getElse("bottom_route", false)
+                ? BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    items: const [
+                      BottomNavigationBarItem(
+                          label: "Home", icon: Icon(Icons.home)),
+                      BottomNavigationBarItem(
+                          label: "EatWhat", icon: Icon(Icons.restaurant)),
+                      BottomNavigationBarItem(
+                          label: "Personal", icon: Icon(Icons.person)),
+                      BottomNavigationBarItem(
+                        label: "Settings",
+                        icon: Icon(Icons.settings),
+                      )
+                    ],
+                    onTap: (value) => pushIndex(context, value, ispop: false),
+                  )
+                : null,
+        body: Navigator(
+            key: _navigatorKey,
+            initialRoute: "/home",
+            onGenerateRoute: (settings) => settings.name == "/settings"
+                ? MaterialPageRoute(
+                    builder: (context) => routes[settings.name ?? "/home"]!(
+                        context, callbackSetState))
+                : MaterialPageRoute(
+                    builder: (context) =>
+                        routes[settings.name ?? "/home"]!(context))),
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(

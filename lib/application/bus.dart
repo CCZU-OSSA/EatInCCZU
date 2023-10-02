@@ -14,7 +14,7 @@ class ApplicationBus {
     holder[key] = value;
   }
 
-  V getfromHolder<V>(String key, V fallback) {
+  V getfromHolderElse<V>(String key, V fallback) {
     return holder.containsKey(key) ? holder[key] : fallback;
   }
 }

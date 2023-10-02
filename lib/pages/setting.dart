@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Setting extends StatefulWidget {
-  const Setting({super.key});
+  final Function callback;
+  const Setting({super.key, required this.callback});
 
   @override
   State<StatefulWidget> createState() => _SettingState();
@@ -12,9 +13,9 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
-    double tv = config(context: context).getOrWrite("font_scale", 1.0);
     return ListView(
       children: [
+        const Divider(),
         const ListTile(
           leading: Icon(Icons.display_settings),
           title: Text("UI设置", style: TextStyle(fontWeight: FontWeight.w700)),
@@ -22,6 +23,19 @@ class _SettingState extends State<Setting> {
               style: TextStyle(fontWeight: FontWeight.w600)),
         ),
         const Divider(),
+        ListTile(
+          leading: const Icon(Icons.route),
+          title: const Text(
+            "底部导航",
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+          trailing: Switch(
+              value: config(context: context).getOrWrite("bottom_route", false),
+              onChanged: (v) => setState(() {
+                    config(context: context).writeKeySync("bottom_route", v);
+                    widget.callback();
+                  })),
+        ),
         ListTile(
           leading: const Icon(Icons.font_download),
           title: const Text(
@@ -37,22 +51,26 @@ class _SettingState extends State<Setting> {
                     left: -20,
                     right: 0,
                     child: Slider(
-                        value: tv,
+                        value: config(context: context)
+                            .getOrWrite("font_scale", 1.0),
                         max: 3,
                         min: 0.1,
                         divisions: 29,
                         overlayColor: MaterialStateColor.resolveWith(
                             (states) => Colors.transparent),
-                        label: "$tv",
+                        label:
+                            "${config(context: context).getOrWrite("font_scale", 1.0)}",
                         onChanged: (v) {
                           setState(() {
-                            tv = double.parse(v.toStringAsPrecision(2));
-                            config(context: context).writeKey("font_scale", tv);
+                            config(context: context).writeKey("font_scale",
+                                double.parse(v.toStringAsPrecision(2)));
                           });
                         }))
               ])),
-          trailing: Text("$tv"),
+          trailing:
+              Text("${config(context: context).getOrWrite("font_scale", 1.0)}"),
         ),
+        const Divider(),
         const ListTile(
           leading: Icon(Icons.info),
           title: Text("关于", style: TextStyle(fontWeight: FontWeight.w700)),
