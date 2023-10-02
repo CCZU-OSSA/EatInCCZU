@@ -96,10 +96,23 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   );
   final routes = {
-    "/": (context) => home,
-    "/settings": (context, cb) => Setting(callback: cb),
-    "/eatwhat": (context) => const EatWhat(),
-    "/personal": (context) => const Personal()
+    "/": (context) => DecoratedBox(
+          decoration:
+              BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+          child: home,
+        ),
+    "/settings": (context, cb) => DecoratedBox(
+        decoration:
+            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+        child: Setting(callback: cb)),
+    "/eatwhat": (context) => DecoratedBox(
+        decoration:
+            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+        child: const EatWhat()),
+    "/personal": (context) => DecoratedBox(
+        decoration:
+            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+        child: const Personal())
   };
 
   final _navigatorKey = GlobalKey<NavigatorState>();
@@ -109,9 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void pushPage(BuildContext context, String name, String title,
       {bool ispop = true}) {
+    _navigatorKey.currentState?.pushNamed(name);
     setState(() {
       _title = title;
-      _navigatorKey.currentState?.pushNamed(name);
       if (ispop) {
         Navigator.of(context).pop(context);
       }
