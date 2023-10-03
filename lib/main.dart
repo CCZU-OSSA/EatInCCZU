@@ -5,6 +5,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eatincczu/application/bus.dart';
 import 'package:eatincczu/application/config.dart';
 import 'package:eatincczu/application/log.dart';
+import 'package:eatincczu/data/typed.dart';
 import 'package:eatincczu/pages/eatwhat.dart';
 import 'package:eatincczu/pages/personal.dart';
 import 'package:eatincczu/pages/widgets/markdown.dart';
@@ -22,9 +23,17 @@ void main() async {
           fontFamily: "winfont");
     }
   }
-
+  EateryList eateryList;
+  File eatryfile = File("${await getPlatPath()}/eaterylist.json");
+  if (await eatryfile.exists()) {
+    eateryList = await EateryList.fromFile(eatryfile);
+  } else {
+    eateryList = EateryList();
+    await eatryfile.writeAsString(EateryList().encode());
+  }
   runApp(Provider<ApplicationBus>.value(
-    value: ApplicationBus(await createConfig(), await createLogger()),
+    value: ApplicationBus(await createConfig(), await createLogger(),
+        eateryList: eateryList),
     child: const MyApp(),
   ));
 }
@@ -96,23 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
     ],
   );
   final routes = {
-    "/": (context) => DecoratedBox(
-          decoration:
-              BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-          child: home,
-        ),
-    "/settings": (context, cb) => DecoratedBox(
-        decoration:
-            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-        child: Setting(callback: cb)),
-    "/eatwhat": (context) => DecoratedBox(
-        decoration:
-            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-        child: const EatWhat()),
-    "/personal": (context) => DecoratedBox(
-        decoration:
-            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-        child: const Personal())
+    "/": (context) => home,
+    "/settings": (context, cb) => Setting(callback: cb),
+    "/eatwhat": (context) => const EatWhat(),
+    "/personal": (context) => const Personal()
   };
 
   final _navigatorKey = GlobalKey<NavigatorState>();
@@ -214,10 +210,20 @@ class _MyHomePageState extends State<MyHomePage> {
             onGenerateRoute: (settings) {
               return settings.name == "/settings"
                   ? MaterialPageRoute(
-                      builder: (context) =>
-                          routes[settings.name]!(context, callbackSetState))
+                      builder: (context) => DecoratedBox(
+                            decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor),
+                            child: routes[settings.name]!(
+                                context, callbackSetState),
+                          ))
                   : MaterialPageRoute(
-                      builder: (context) => routes[settings.name]!(context));
+                      builder: (context) => DecoratedBox(
+                            decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor),
+                            child: routes[settings.name]!(context),
+                          ));
             }),
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,

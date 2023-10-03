@@ -12,7 +12,7 @@ class ApplicationBus {
   AppConfig config;
   Logger logger;
   EateryList? eateryList;
-  ApplicationBus(this.config, this.logger);
+  ApplicationBus(this.config, this.logger, {this.eateryList});
   Map<String, dynamic> holder = {};
   void updateToHolder(String key, dynamic value) {
     holder[key] = value;
@@ -21,6 +21,14 @@ class ApplicationBus {
   V getfromHolderElse<V>(String key, V fallback) {
     return holder.containsKey(key) ? holder[key] : fallback;
   }
+}
+
+EateryList eateryList({BuildContext? context}) {
+  return Provider.of<ApplicationBus>(
+              context ?? globalApplicationKey.currentContext!,
+              listen: false)
+          .eateryList ??
+      EateryList();
 }
 
 AppConfig config({BuildContext? context}) {
@@ -43,12 +51,18 @@ final GlobalKey<NavigatorState> globalNavigatorKey =
     GlobalKey<NavigatorState>();
 
 Future<String> getPlatPath() async {
+  if (Platform.isWindows) {
+    return ".";
+  }
   return (await tryGetExternalStorageDirectory() ??
           await getApplicationSupportDirectory())
       .path;
 }
 
 Future<String> getPlatCachePath() async {
+  if (Platform.isWindows) {
+    return ".";
+  }
   return (await tryGetExternalCacheDirectory() ??
           await getApplicationCacheDirectory())
       .path;

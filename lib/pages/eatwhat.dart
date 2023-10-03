@@ -1,3 +1,4 @@
+import 'package:eatincczu/application/bus.dart';
 import 'package:eatincczu/data/typed.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +12,9 @@ class EatWhat extends StatefulWidget {
 }
 
 class _EatWhatState extends State<EatWhat> {
-  DisplayInfo? _info;
-
   @override
   Widget build(BuildContext context) {
-    var info = _info ?? EateryList().getDisplayInfo(callback: setState);
+    var info = getDisplayInfo(callback: setState);
     return SingleChildScrollView(
       child: Column(children: [
         const SizedBox(
@@ -35,7 +34,11 @@ class _EatWhatState extends State<EatWhat> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FilledButton(
-                onPressed: () {},
+                onPressed: () => setState(() {
+                      logger(context: context)
+                          .i(eateryList(context: context).getRandomEatry());
+                      setInfos(eateryList(context: context).getRandomEatry());
+                    }),
                 child: const Text(
                   "上份菜❤",
                   style: TextStyle(fontWeight: FontWeight.w700),

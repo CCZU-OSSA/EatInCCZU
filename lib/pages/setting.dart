@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:eatincczu/application/bus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -69,6 +72,54 @@ class _SettingState extends State<Setting> {
               ])),
           trailing:
               Text("${config(context: context).getOrWrite("font_scale", 1.0)}"),
+        ),
+        const Divider(),
+        const ListTile(
+            leading: Icon(Icons.receipt),
+            title: Text("食谱设置", style: TextStyle(fontWeight: FontWeight.w700)),
+            subtitle: Text("Recipe Settings",
+                style: TextStyle(fontWeight: FontWeight.w600))),
+        const Divider(),
+        ListTile(
+          title:
+              const Text("编辑食谱", style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: const Text("Edit Recipe",
+              style: TextStyle(fontWeight: FontWeight.w400)),
+          trailing: const Icon(Icons.edit),
+          onTap: () {},
+        ),
+        ListTile(
+          title:
+              const Text("导入食谱", style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: const Text("Import Recipe",
+              style: TextStyle(fontWeight: FontWeight.w400)),
+          trailing: const Icon(Icons.download),
+          onTap: () {
+            FilePicker.platform.pickFiles().then((value) async {
+              if (value == null) {
+                return;
+              }
+              File("${await getPlatPath()}/eatrylist.json").writeAsString(
+                  await File(value.files[0].path!).readAsString());
+            });
+          },
+        ),
+        ListTile(
+          title:
+              const Text("导出食谱", style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: const Text("Export Recipe",
+              style: TextStyle(fontWeight: FontWeight.w400)),
+          trailing: const Icon(Icons.output),
+          onTap: () {
+            FilePicker.platform.getDirectoryPath().then((value) {
+              if (value == null) {
+                return;
+              } else {
+                File("$value/eatrylist.json")
+                    .writeAsString(eateryList(context: context).encode());
+              }
+            });
+          },
         ),
         const Divider(),
         const ListTile(

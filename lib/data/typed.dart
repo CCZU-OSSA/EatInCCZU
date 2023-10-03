@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:eatincczu/application/bus.dart';
 import 'package:eatincczu/pages/widgets/markdown.dart';
 import 'package:flutter/material.dart';
 
@@ -27,24 +26,23 @@ class Eatery extends JsonSerializable {
   String location;
   String name;
   String description;
-  List<Dish>? dishes;
+  String? image;
 
   Eatery({
     this.location = "幻想乡",
     this.name = "夜雀食堂",
     this.description = "据说这里的烤八目鳗很好吃~",
-    this.dishes,
-  }) {
-    dishes ??= [];
-  }
+    this.image,
+  });
 
   @override
   Map<String, dynamic> toMap() {
-    return {};
-  }
-
-  Dish getRandomDish() {
-    return dishes == [] ? dishes![rnd.nextInt(dishes!.length)] : Dish();
+    return {
+      "location": location,
+      "name": name,
+      "description": description,
+      "image": image
+    };
   }
 
   static Eatery fromMap(Map<String, dynamic> map) {
@@ -52,46 +50,16 @@ class Eatery extends JsonSerializable {
         name: map["name"],
         location: map["location"],
         description: map["description"],
-        dishes: List.generate((map["dishes"] as List).length,
-            (index) => Dish.fromMap(map["dishes"][index])));
+        image: map["image"]);
   }
 
   static Eatery fromString(String data) {
     return fromMap(jsonDecode(data));
   }
-}
-
-///```json
-/// {
-///   "name": "dish_0",
-///   "price": "14.0",
-///   "description":"",
-///   "image":""
-/// }
-/// ```
-class Dish extends JsonSerializable {
-  String name;
-  String price;
-  String description;
-  String? image;
-
-  Dish(
-      {this.name = "烤夜雀",
-      this.description = "老板娘可不能吃😨",
-      this.price = "?",
-      this.image});
 
   @override
-  Map<String, dynamic> toMap() {
-    return {"name": name, "price": price, "image": image};
-  }
-
-  static Dish fromMap(Map<String, dynamic> map) {
-    return Dish(name: map["name"], price: map["price"], image: map["images"]);
-  }
-
-  static Dish fromString(String data) {
-    return fromMap(jsonDecode(data));
+  String toString() {
+    return toMap().toString();
   }
 }
 
@@ -109,11 +77,11 @@ class EateryList extends JsonSerializable {
   String description;
   List<Eatery>? data;
   EateryList(
-      {this.name = "Unknown",
-      this.publisher = "Unknown",
+      {this.name = "default",
+      this.publisher = "Developer",
       this.description = "Unknown",
       this.data}) {
-    data ??= [];
+    data ??= [Eatery()];
   }
 
   @override
@@ -122,19 +90,19 @@ class EateryList extends JsonSerializable {
       "name": name,
       "publisher": publisher,
       "description": description,
-      "data": data
+      "data": data!.map((e) => e.toMap()).toList()
     };
   }
 
   Eatery getRandomEatry() {
-    return data == [] ? data![rnd.nextInt(data!.length)] : Eatery();
+    return data != [] ? data![rnd.nextInt(data!.length)] : Eatery();
   }
 
   static EateryList fromMap(Map<String, dynamic> map) {
     return EateryList(
         name: map["name"],
         publisher: map["publisher"],
-        description: map["descrpition"],
+        description: map["description"],
         data: List.generate((map["data"] as List).length,
             (index) => Eatery.fromMap(map["data"][index])));
   }
@@ -143,47 +111,67 @@ class EateryList extends JsonSerializable {
     return fromMap(jsonDecode(data));
   }
 
-  static Future<EateryList> fromFile(String path) async {
-    return fromString(await File(path).readAsString());
+  static Future<EateryList> fromPath(String path) async {
+    return await fromFile(File(path));
   }
 
-  static EateryList fromFileSync(String path) {
-    return fromString(File(path).readAsStringSync());
+  static Future<EateryList> fromFile(File file) async {
+    return fromString(await file.readAsString());
   }
 
-  DisplayInfo getDisplayInfo({List<PanelInfo>? infos, Function? callback}) {
-    infos ??= _infos;
-    return DisplayInfo(
-        ExpansionPanelList(
-            expansionCallback: (panelIndex, isExpanded) {
-              (callback ?? (v) {})(() {
-                infos![panelIndex].doExpand();
-              });
-            },
-            children: infos
-                .map((e) => ExpansionPanel(
-                    isExpanded: e.isExpand,
-                    headerBuilder: (context, isExpanded) {
-                      return markdownBodyString(e.head);
-                    },
-                    body: markdownBodyString(e.body)))
-                .toList()),
-        image: dish.image != null ? Image.network(dish.image!) : null);
+  static EateryList fromFileSync(File file) {
+    return fromString(file.readAsStringSync());
+  }
+
+  static EateryList fromPathSync(String path) {
+    return fromFileSync(File(path));
+  }
+
+  @override
+  String toString() {
+    return toMap().toString();
   }
 }
 
-List<PanelInfo> generatefromED(Eatery eatery, Dish dish) {
+List<PanelInfo> generatePanelInfo(Eatery eatery) {
   return [
-    PanelInfo(head: "店名", body: eatery.name),
-    PanelInfo(head: "位置", body: eatery.location),
-    PanelInfo(head: "简述", body: eatery.description),
-    PanelInfo(head: "选菜", body: dish.name)
+    PanelInfo(head: "**店名**", body: eatery.name),
+    PanelInfo(head: "**位置**", body: eatery.location),
+    PanelInfo(head: "**简述**", body: eatery.description),
   ];
 }
 
-Eatery eatery = EateryList().getRandomEatry();
-Dish dish = eatery.getRandomDish();
-List<PanelInfo> _infos = generatefromED(eatery, dish);
+Eatery _eatery = Eatery();
+List<PanelInfo> _infos = generatePanelInfo(_eatery);
+List<PanelInfo> getInfos() {
+  return _infos;
+}
+
+void setInfos(Eatery eatery) {
+  _infos.map((e) => e.isExpand = false);
+  _eatery = eatery;
+  _infos = generatePanelInfo(eatery);
+}
+
+DisplayInfo getDisplayInfo({List<PanelInfo>? infos, Function? callback}) {
+  infos ??= _infos;
+  return DisplayInfo(
+      ExpansionPanelList(
+          expansionCallback: (panelIndex, isExpanded) {
+            (callback ?? (v) {})(() {
+              infos![panelIndex].doExpand();
+            });
+          },
+          children: infos
+              .map((e) => ExpansionPanel(
+                  isExpanded: e.isExpand,
+                  headerBuilder: (context, isExpanded) {
+                    return markdownBodyString(e.head);
+                  },
+                  body: markdownBodyString(e.body)))
+              .toList()),
+      image: _eatery.image != null ? Image.network(_eatery.image!) : null);
+}
 
 class DisplayInfo {
   ExpansionPanelList panellist;
