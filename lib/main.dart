@@ -11,12 +11,13 @@ import 'package:eatincczu/pages/editor.dart';
 import 'package:eatincczu/pages/personal.dart';
 import 'package:eatincczu/pages/widgets/markdown.dart';
 import 'package:eatincczu/pages/setting.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  Logger.level = Level.all;
+  Logger.level = kDebugMode ? Level.all : Level.info;
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
     if (await File("winfont").exists()) {
