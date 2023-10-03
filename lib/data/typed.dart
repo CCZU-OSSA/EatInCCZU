@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:eatincczu/application/bus.dart';
 import 'package:eatincczu/pages/widgets/markdown.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,8 @@ abstract class JsonSerializable {
 /// {
 ///   "name":"eatry_0",
 ///   "location":"where",
-///   "descrpiton":"",
-///   "dishes":[],
+///   "description":"",
+///   "image":"",
 /// }
 ///```
 class Eatery extends JsonSerializable {
@@ -105,6 +106,10 @@ class EateryList extends JsonSerializable {
         description: map["description"],
         data: List.generate((map["data"] as List).length,
             (index) => Eatery.fromMap(map["data"][index])));
+  }
+
+  void sync() async {
+    File("${await getPlatPath()}/eaterylist.json").writeAsString(encode());
   }
 
   static EateryList fromString(String data) {

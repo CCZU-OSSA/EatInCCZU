@@ -33,7 +33,7 @@ class _SettingState extends State<Setting> {
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           trailing: Switch(
-              value: config(context: context).getOrWrite("bottom_route", false),
+              value: config(context: context).getOrWrite("bottom_route", true),
               onChanged: (v) => setState(() {
                     config(context: context).writeKeySync("bottom_route", v);
                     widget.callback();
@@ -82,14 +82,6 @@ class _SettingState extends State<Setting> {
         const Divider(),
         ListTile(
           title:
-              const Text("编辑食谱", style: TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: const Text("Edit Recipe",
-              style: TextStyle(fontWeight: FontWeight.w400)),
-          trailing: const Icon(Icons.edit),
-          onTap: () {},
-        ),
-        ListTile(
-          title:
               const Text("导入食谱", style: TextStyle(fontWeight: FontWeight.w500)),
           subtitle: const Text("Import Recipe",
               style: TextStyle(fontWeight: FontWeight.w400)),
@@ -105,11 +97,12 @@ class _SettingState extends State<Setting> {
           },
         ),
         ListTile(
-          title:
-              const Text("导出食谱", style: TextStyle(fontWeight: FontWeight.w500)),
+          title: Text(
+              "导出食谱${Platform.isAndroid ? "(请选择Document文件夹以确保导出)" : ""}",
+              style: const TextStyle(fontWeight: FontWeight.w500)),
           subtitle: const Text("Export Recipe",
               style: TextStyle(fontWeight: FontWeight.w400)),
-          trailing: const Icon(Icons.output),
+          trailing: const Icon(Icons.upload),
           onTap: () {
             FilePicker.platform.getDirectoryPath().then((value) {
               if (value == null) {

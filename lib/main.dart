@@ -7,6 +7,7 @@ import 'package:eatincczu/application/config.dart';
 import 'package:eatincczu/application/log.dart';
 import 'package:eatincczu/data/typed.dart';
 import 'package:eatincczu/pages/eatwhat.dart';
+import 'package:eatincczu/pages/editor.dart';
 import 'package:eatincczu/pages/personal.dart';
 import 'package:eatincczu/pages/widgets/markdown.dart';
 import 'package:eatincczu/pages/setting.dart';
@@ -108,7 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
     "/": (context) => home,
     "/settings": (context, cb) => Setting(callback: cb),
     "/eatwhat": (context) => const EatWhat(),
-    "/personal": (context) => const Personal()
+    "/personal": (context) => const Personal(),
+    "/editor": (context) => const Editor(),
   };
 
   final _navigatorKey = GlobalKey<NavigatorState>();
@@ -134,7 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
       () => pushPage(context, "/", "🏠主页", ispop: ispop),
       () => pushPage(context, "/eatwhat", "😋开饭", ispop: ispop),
       () => pushPage(context, "/personal", "🧑‍🎓个人", ispop: ispop),
-      () => pushPage(context, "/settings", "🔧设置", ispop: ispop)
+      () => pushPage(context, "/settings", "🔧设置", ispop: ispop),
+      () => pushPage(context, "/editor", "🖋️编辑", ispop: ispop)
     ][index]();
   }
 
@@ -146,11 +149,17 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration:
-                  BoxDecoration(color: Theme.of(context).colorScheme.onPrimary),
-              child: const Text("🗺️导航栏",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 30)),
+              child: Column(children: [
+                Image.asset(
+                  "resource/images/appicon.png",
+                  width: 110,
+                  height: 110,
+                ),
+                const Text(
+                  "CCZU今天吃什么",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                )
+              ]),
             ),
             ListTile(
                 leading: const Icon(Icons.home),
@@ -175,10 +184,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: const Text("设置",
                     style: TextStyle(fontWeight: FontWeight.w700)),
                 onTap: () => pushIndex(context, 3)),
+            ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text("编辑",
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                onTap: () => pushIndex(context, 4))
           ],
         )),
         bottomNavigationBar:
-            config(context: context).getElse("bottom_route", false)
+            config(context: context).getElse("bottom_route", true)
                 ? BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
                     selectedItemColor: Theme.of(context).colorScheme.primary,
@@ -199,7 +213,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       BottomNavigationBarItem(
                           label: "设置",
                           icon: Icon(Icons.settings_outlined),
-                          activeIcon: Icon(Icons.settings))
+                          activeIcon: Icon(Icons.settings)),
+                      BottomNavigationBarItem(
+                          label: "编辑",
+                          icon: Icon(Icons.edit_outlined),
+                          activeIcon: Icon(Icons.edit))
                     ],
                     onTap: (value) => pushIndex(context, value, ispop: false),
                   )
