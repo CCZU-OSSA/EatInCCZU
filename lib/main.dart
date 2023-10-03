@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: () => pushIndex(context, 0)),
             const Divider(),
             ListTile(
-                leading: const Icon(Icons.restaurant),
+                leading: const Icon(Icons.food_bank),
                 title: const Text("开饭",
                     style: TextStyle(fontWeight: FontWeight.w700)),
                 onTap: () => pushIndex(context, 1)),
@@ -181,26 +181,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: () => pushIndex(context, 3)),
           ],
         )),
-        bottomNavigationBar: config(context: context)
-                .getElse("bottom_route", false)
-            ? BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Theme.of(context).colorScheme.primary,
-                currentIndex: _bottomindex,
-                items: const [
-                  BottomNavigationBarItem(label: "主页", icon: Icon(Icons.home)),
-                  BottomNavigationBarItem(
-                      label: "开饭", icon: Icon(Icons.restaurant)),
-                  BottomNavigationBarItem(
-                      label: "个人", icon: Icon(Icons.person)),
-                  BottomNavigationBarItem(
-                    label: "设置",
-                    icon: Icon(Icons.settings),
+        bottomNavigationBar:
+            config(context: context).getElse("bottom_route", false)
+                ? BottomNavigationBar(
+                    type: BottomNavigationBarType.fixed,
+                    selectedItemColor: Theme.of(context).colorScheme.primary,
+                    currentIndex: _bottomindex,
+                    items: const [
+                      BottomNavigationBarItem(
+                          label: "主页",
+                          icon: Icon(Icons.home_outlined),
+                          activeIcon: Icon(Icons.home)),
+                      BottomNavigationBarItem(
+                          label: "开饭",
+                          icon: Icon(Icons.food_bank_outlined),
+                          activeIcon: Icon(Icons.food_bank)),
+                      BottomNavigationBarItem(
+                          label: "个人",
+                          icon: Icon(Icons.person_outline),
+                          activeIcon: Icon(Icons.person)),
+                      BottomNavigationBarItem(
+                          label: "设置",
+                          icon: Icon(Icons.settings_outlined),
+                          activeIcon: Icon(Icons.settings))
+                    ],
+                    onTap: (value) => pushIndex(context, value, ispop: false),
                   )
-                ],
-                onTap: (value) => pushIndex(context, value, ispop: false),
-              )
-            : null,
+                : null,
         body: Navigator(
             key: _navigatorKey,
             initialRoute: "/",

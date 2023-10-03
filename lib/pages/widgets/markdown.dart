@@ -22,3 +22,23 @@ Widget asyncMarkdownBody(String resource) {
     },
   );
 }
+
+Widget markdownBodyString(String data) {
+  return FutureBuilder(
+    future: Future.value(data),
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        return Markdown(
+          data: snapshot.data!,
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              textScaleFactor:
+                  config(context: context).getElse("font_scale", 1.0)),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+        );
+      } else {
+        return const Text("loading");
+      }
+    },
+  );
+}

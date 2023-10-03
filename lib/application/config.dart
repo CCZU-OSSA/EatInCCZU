@@ -64,6 +64,6 @@ class AppConfig {
 Future<AppConfig> createConfig() async {
   return AppConfig(
       path: Platform.isAndroid
-          ? "${await getAndroidPath()}/app.json"
+          ? "${await getPlatPath()}/app.json"
           : "app.json");
 }

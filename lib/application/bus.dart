@@ -1,5 +1,7 @@
+import 'dart:io';
 
 import 'package:eatincczu/application/config.dart';
+import 'package:eatincczu/data/typed.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +11,7 @@ import 'package:provider/provider.dart';
 class ApplicationBus {
   AppConfig config;
   Logger logger;
-
+  EateryList? eateryList;
   ApplicationBus(this.config, this.logger);
   Map<String, dynamic> holder = {};
   void updateToHolder(String key, dynamic value) {
@@ -40,8 +42,30 @@ final GlobalKey globalApplicationKey = GlobalKey();
 final GlobalKey<NavigatorState> globalNavigatorKey =
     GlobalKey<NavigatorState>();
 
-Future<String> getAndroidPath() async {
-  return (await getExternalStorageDirectory() ??
+Future<String> getPlatPath() async {
+  return (await tryGetExternalStorageDirectory() ??
           await getApplicationSupportDirectory())
       .path;
+}
+
+Future<String> getPlatCachePath() async {
+  return (await tryGetExternalCacheDirectory() ??
+          await getApplicationCacheDirectory())
+      .path;
+}
+
+Future<Directory?> tryGetExternalStorageDirectory() async {
+  try {
+    return await getExternalStorageDirectory();
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<Directory?> tryGetExternalCacheDirectory() async {
+  try {
+    return (await getExternalCacheDirectories())?[0];
+  } catch (e) {
+    return null;
+  }
 }

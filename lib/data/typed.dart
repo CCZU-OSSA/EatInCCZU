@@ -1,5 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+
+import 'package:eatincczu/application/bus.dart';
+import 'package:eatincczu/pages/widgets/markdown.dart';
+import 'package:flutter/material.dart';
+
+Random rnd = Random();
 
 abstract class JsonSerializable {
   Map<String, dynamic> toMap();
@@ -14,26 +21,30 @@ abstract class JsonSerializable {
 ///   "location":"where",
 ///   "descrpiton":"",
 ///   "dishes":[],
-///   "images":[]
 /// }
 ///```
 class Eatery extends JsonSerializable {
   String location;
   String name;
   String description;
-  String? image;
   List<Dish>? dishes;
 
-  Eatery(
-      {this.location = "Unknown",
-      this.name = "Unknown",
-      this.description = "Unknown",
-      this.dishes,
-      this.image});
+  Eatery({
+    this.location = "幻想乡",
+    this.name = "夜雀食堂",
+    this.description = "据说这里的烤八目鳗很好吃~",
+    this.dishes,
+  }) {
+    dishes ??= [];
+  }
 
   @override
   Map<String, dynamic> toMap() {
     return {};
+  }
+
+  Dish getRandomDish() {
+    return dishes == [] ? dishes![rnd.nextInt(dishes!.length)] : Dish();
   }
 
   static Eatery fromMap(Map<String, dynamic> map) {
@@ -41,7 +52,6 @@ class Eatery extends JsonSerializable {
         name: map["name"],
         location: map["location"],
         description: map["description"],
-        image: map["images"],
         dishes: List.generate((map["dishes"] as List).length,
             (index) => Dish.fromMap(map["dishes"][index])));
   }
@@ -61,14 +71,14 @@ class Eatery extends JsonSerializable {
 /// ```
 class Dish extends JsonSerializable {
   String name;
-  double price;
+  String price;
   String description;
   String? image;
 
   Dish(
-      {this.name = "Unknown",
-      this.description = "Unknown",
-      this.price = -1,
+      {this.name = "烤夜雀",
+      this.description = "老板娘可不能吃😨",
+      this.price = "?",
       this.image});
 
   @override
@@ -116,6 +126,10 @@ class EateryList extends JsonSerializable {
     };
   }
 
+  Eatery getRandomEatry() {
+    return data == [] ? data![rnd.nextInt(data!.length)] : Eatery();
+  }
+
   static EateryList fromMap(Map<String, dynamic> map) {
     return EateryList(
         name: map["name"],
@@ -135,5 +149,56 @@ class EateryList extends JsonSerializable {
 
   static EateryList fromFileSync(String path) {
     return fromString(File(path).readAsStringSync());
+  }
+
+  DisplayInfo getDisplayInfo({List<PanelInfo>? infos, Function? callback}) {
+    infos ??= _infos;
+    return DisplayInfo(
+        ExpansionPanelList(
+            expansionCallback: (panelIndex, isExpanded) {
+              (callback ?? (v) {})(() {
+                infos![panelIndex].doExpand();
+              });
+            },
+            children: infos
+                .map((e) => ExpansionPanel(
+                    isExpanded: e.isExpand,
+                    headerBuilder: (context, isExpanded) {
+                      return markdownBodyString(e.head);
+                    },
+                    body: markdownBodyString(e.body)))
+                .toList()),
+        image: dish.image != null ? Image.network(dish.image!) : null);
+  }
+}
+
+List<PanelInfo> generatefromED(Eatery eatery, Dish dish) {
+  return [
+    PanelInfo(head: "店名", body: eatery.name),
+    PanelInfo(head: "位置", body: eatery.location),
+    PanelInfo(head: "简述", body: eatery.description),
+    PanelInfo(head: "选菜", body: dish.name)
+  ];
+}
+
+Eatery eatery = EateryList().getRandomEatry();
+Dish dish = eatery.getRandomDish();
+List<PanelInfo> _infos = generatefromED(eatery, dish);
+
+class DisplayInfo {
+  ExpansionPanelList panellist;
+  Image? image;
+  DisplayInfo(this.panellist, {this.image}) {
+    image ??= Image.asset("resource/images/mystia.png");
+  }
+}
+
+class PanelInfo {
+  bool isExpand = false;
+  String head;
+  String body;
+  PanelInfo({this.head = "Nothing...", this.body = "Nothing..."});
+  void doExpand() {
+    isExpand = !isExpand;
   }
 }

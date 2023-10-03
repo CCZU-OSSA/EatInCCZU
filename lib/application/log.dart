@@ -11,7 +11,7 @@ Future<Logger> createLogger() async {
         FileOutput(
             overrideExisting: true,
             file: File(Platform.isAndroid
-                ? "${await getAndroidPath()}/latest.log"
+                ? "${await getPlatCachePath()}/latest.log"
                 : "latest.log"))
       ]),
       printer: PrefixPrinter(SimplePrinter(colors: false)));
