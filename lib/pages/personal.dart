@@ -59,9 +59,8 @@ class _PersonalState extends State<Personal> {
           Material(
               child: Ink(
                   child: InkWell(
-            child: makeCard(Icons.card_membership, "校园卡"),
-            onTap: () => launchUrlString(
-                "http://ywtb.cczu.edu.cn/pc/ykt/ykt.html",
+            child: makeCard(Icons.card_membership, "一卡通"),
+            onTap: () => launchUrlString("http://sso.cczu.edu.cn/sso/login",
                 mode: LaunchMode.inAppWebView),
           )))
         ])
