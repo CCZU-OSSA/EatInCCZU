@@ -73,6 +73,26 @@ class _SettingState extends State<Setting> {
           trailing:
               Text("${config(context: context).getOrWrite("font_scale", 1.0)}"),
         ),
+        const ListTile(
+          leading: Icon(Icons.settings_input_component),
+          title: Text("偏好设置", style: TextStyle(fontWeight: FontWeight.w700)),
+          subtitle: Text("Preferences Settings",
+              style: TextStyle(fontWeight: FontWeight.w600)),
+        ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.folder_delete),
+          title: const Text("选菜不折叠",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Switch(
+              value:
+                  config(context: context).getOrWrite("fold_after_chose", true),
+              onChanged: (v) => setState(() {
+                    config(context: context)
+                        .writeKeySync("fold_after_chose", v);
+                    widget.callback();
+                  })),
+        ),
         const Divider(),
         const ListTile(
             leading: Icon(Icons.receipt),

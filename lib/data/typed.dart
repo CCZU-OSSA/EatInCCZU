@@ -162,9 +162,14 @@ List<PanelInfo> getInfos() {
 }
 
 void setInfos(Eatery eatery) {
-  _infos.map((e) => e.isExpand = false);
+  var expandStatus = _infos.map((e) => e.isExpand).toList();
   _eatery = eatery;
   _infos = generatePanelInfo(eatery);
+  if (config().getElse("fold_after_chose", true)) {
+    for (int i = 0; i < expandStatus.length; i++) {
+      _infos[i].isExpand = expandStatus[i];
+    }
+  }
 }
 
 DisplayInfo getDisplayInfo({List<PanelInfo>? infos, Function? callback}) {
