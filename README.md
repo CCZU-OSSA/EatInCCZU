@@ -1,16 +1,29 @@
-# eatincczu
+<div align=center>
+  <img width=200 src="resource\images\appicon.png"/>
+  <h1 align="center">CCZU今天吃什么</h1>
+</div>
 
-A new Flutter project.
+<div align=center>
+  <img src="https://img.shields.io/badge/Flutter-3+-blue" alt="Flutter">
+  <img src="https://img.shields.io/github/languages/code-size/H2Sxxa/EatInCCZU" alt="size">
+  <img src="https://img.shields.io/github/license/H2Sxxa/EatInCCZU" alt="license">
+</div>
+<div align=center>
+  <img src="https://img.shields.io/badge/CCZU-UNOFFICAL-red" alt="CCZU">
+  <img src="https://img.shields.io/github/actions/workflow/status/H2Sxxa/EatInCCZU/APK-Build.yml" alt="Build">
+</div>
 
-## Getting Started
+## 注意 ⚠
 
-This project is a starting point for a Flutter application.
+此应用与CCZU无关，由非CCZU工作人员开发，请勿到无关场所提及本应用。
 
-A few resources to get you started if this is your first Flutter project:
+## 简介 📄
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+一站决定今天吃什么，从此摆脱吃饭选择困难症！😋
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 截图
+
+![](doc\snap_0.jpg)
+
+## 欢迎前往ISSUE分享你的食谱/提出建议
+
