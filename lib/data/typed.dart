@@ -116,6 +116,15 @@ class EateryList extends JsonSerializable {
     return fromMap(jsonDecode(data));
   }
 
+  EateryList copyFromString(String eateryls) {
+    var lft = EateryList.fromString(eateryls);
+    name = lft.name;
+    data = lft.data;
+    description = lft.description;
+    publisher = lft.publisher;
+    return this;
+  }
+
   static Future<EateryList> fromPath(String path) async {
     return await fromFile(File(path));
   }

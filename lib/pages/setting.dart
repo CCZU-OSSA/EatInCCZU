@@ -91,8 +91,10 @@ class _SettingState extends State<Setting> {
               if (value == null) {
                 return;
               }
-              File("${await getPlatPath()}/eatrylist.json").writeAsString(
-                  await File(value.files[0].path!).readAsString());
+              eateryList(context: context)
+                  .copyFromString(
+                      await File(value.files[0].path!).readAsString())
+                  .sync();
             });
           },
         ),
@@ -108,7 +110,7 @@ class _SettingState extends State<Setting> {
               if (value == null) {
                 return;
               } else {
-                File("$value/eatrylist.json")
+                File("$value/eaterylist.json")
                     .writeAsString(eateryList(context: context).encode());
               }
             });
