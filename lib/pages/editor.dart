@@ -18,7 +18,7 @@ class _Editor extends State<Editor> {
       showDialog(
         context: context,
         builder: (context) => SimpleDialog(
-          title: const Text("修改"),
+          title: const Text("编辑"),
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
