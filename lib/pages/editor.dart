@@ -26,12 +26,14 @@ class _Editor extends State<Editor> {
                     width: 250,
                     child: TextField(
                       onChanged: (value) => tv = value,
-                      onEditingComplete: () {
-                        setState(() {
-                          callback(tv);
-                        });
+                      onTapOutside: (event) => setState(() {
+                        callback(tv);
                         eateryList(context: context).sync();
-                      },
+                      }),
+                      onEditingComplete: () => setState(() {
+                        callback(tv);
+                        eateryList(context: context).sync();
+                      }),
                       decoration:
                           const InputDecoration(border: OutlineInputBorder()),
                     )),
