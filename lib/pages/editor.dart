@@ -11,9 +11,10 @@ class Editor extends StatefulWidget {
 }
 
 class _Editor extends State<Editor> {
+  final _textctrl = TextEditingController();
   void handleValueEdit(Function callback) {
     setState(() {
-      var tv = "";
+      var tv = _textctrl.text;
       showDialog(
         context: context,
         builder: (context) => SimpleDialog(
@@ -25,12 +26,10 @@ class _Editor extends State<Editor> {
                 SizedBox(
                     width: 250,
                     child: TextField(
+                      maxLines: null,
+                      controller: _textctrl,
                       onChanged: (value) => tv = value,
                       onTapOutside: (event) => setState(() {
-                        callback(tv);
-                        eateryList(context: context).sync();
-                      }),
-                      onEditingComplete: () => setState(() {
                         callback(tv);
                         eateryList(context: context).sync();
                       }),
@@ -139,19 +138,23 @@ class _Editor extends State<Editor> {
                                     eateryList(context: context).sync();
                                   });
                                 }),
-                                DataCell(Text(e.name),
-                                    onTap: () =>
-                                        handleValueEdit((v) => e.name = v)),
-                                DataCell(Text(e.location),
-                                    onTap: () =>
-                                        handleValueEdit((v) => e.location = v)),
-                                DataCell(Text(e.description),
-                                    onTap: () => handleValueEdit(
-                                        (v) => e.description = v)),
-                                DataCell(Text(e.image ?? ""),
-                                    onTap: () => handleValueEdit((v) =>
-                                        e.image =
-                                            v == "" || v == "null" ? null : v))
+                                DataCell(Text(e.name), onTap: () {
+                                  _textctrl.text = e.name;
+                                  handleValueEdit((v) => e.name = v);
+                                }),
+                                DataCell(Text(e.location), onTap: () {
+                                  _textctrl.text = e.location;
+                                  handleValueEdit((v) => e.location = v);
+                                }),
+                                DataCell(Text(e.description), onTap: () {
+                                  _textctrl.text = e.description;
+                                  handleValueEdit((v) => e.description = v);
+                                }),
+                                DataCell(Text(e.image ?? ""), onTap: () {
+                                  _textctrl.text = e.image ?? "";
+                                  handleValueEdit((v) => e.image =
+                                      v == "" || v == "null" ? null : v);
+                                })
                               ]))
                           .toList()),
                 ))),
