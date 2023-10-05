@@ -73,6 +73,7 @@ class _SettingState extends State<Setting> {
           trailing:
               Text("${config(context: context).getOrWrite("font_scale", 1.0)}"),
         ),
+        const Divider(),
         const ListTile(
           leading: Icon(Icons.settings_input_component),
           title: Text("偏好设置", style: TextStyle(fontWeight: FontWeight.w700)),
@@ -81,7 +82,7 @@ class _SettingState extends State<Setting> {
         ),
         const Divider(),
         ListTile(
-          leading: const Icon(Icons.folder_delete),
+          leading: const Icon(Icons.folder),
           title: const Text("选菜不折叠",
               style: TextStyle(fontWeight: FontWeight.w500)),
           trailing: Switch(
@@ -90,8 +91,20 @@ class _SettingState extends State<Setting> {
               onChanged: (v) => setState(() {
                     config(context: context)
                         .writeKeySync("fold_after_chose", v);
-                    widget.callback();
                   })),
+        ),
+        ListTile(
+          leading: const Icon(Icons.cached),
+          title:
+              const Text("页面缓存", style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: const Text("Page Cached",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Switch(
+            onChanged: (value) => setState(() {
+              config(context: context).writeKeySync("page_cached", value);
+            }),
+            value: config(context: context).getOrWrite("page_cached", true),
+          ),
         ),
         const Divider(),
         const ListTile(

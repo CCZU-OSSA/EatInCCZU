@@ -28,24 +28,33 @@ var loading = Dialog(
 );
 
 Widget asyncMarkdownBody(String resource) {
-  return FutureBuilder(
+  var fb = FutureBuilder(
     future: rootBundle.loadString(resource),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
-        return markdownBodyString(snapshot.data!);
+        var mdwd = markdownBodyString(snapshot.data!);
+        ApplicationBus.instance()
+            .updateToHolder("mdwidget-resource:$resource", mdwd);
+        return mdwd;
       } else {
         return loading;
       }
     },
   );
+
+  if (config().getElse("page_cached", true)) {
+    return ApplicationBus.instance()
+        .getfromHolderElse("mdwidget-resource:$resource", fb);
+  }
+  return fb;
 }
 
 Widget markdownBodyString(String data) {
-  return FutureBuilder(
+  var fb = FutureBuilder(
     future: Future.value(data),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
-        return Markdown(
+        var mdswd = Markdown(
           data: snapshot.data!,
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
               textScaleFactor:
@@ -53,9 +62,17 @@ Widget markdownBodyString(String data) {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
         );
+        ApplicationBus.instance()
+            .updateToHolder("mdwidget-string:$data", mdswd);
+        return mdswd;
       } else {
         return loading;
       }
     },
   );
+  if (config().getElse("page_cached", true)) {
+    return ApplicationBus.instance()
+        .getfromHolderElse("mdwidget-string:$data", fb);
+  }
+  return fb;
 }

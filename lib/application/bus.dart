@@ -21,6 +21,11 @@ class ApplicationBus {
   V getfromHolderElse<V>(String key, V fallback) {
     return holder.containsKey(key) ? holder[key] : fallback;
   }
+
+  static ApplicationBus instance({BuildContext? context}) {
+    return Provider.of(context ?? globalApplicationKey.currentContext!,
+        listen: false);
+  }
 }
 
 EateryList eateryList({BuildContext? context}) {
