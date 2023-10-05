@@ -106,6 +106,19 @@ class _SettingState extends State<Setting> {
             value: config(context: context).getOrWrite("page_cached", true),
           ),
         ),
+        ListTile(
+          leading: const Icon(Icons.ac_unit),
+          title: const Text("页面预缓存",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: const Text("Early Loading",
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Switch(
+            onChanged: (value) => setState(() {
+              config(context: context).writeKeySync("early_loading", value);
+            }),
+            value: config(context: context).getOrWrite("early_loading", true),
+          ),
+        ),
         const Divider(),
         const ListTile(
             leading: Icon(Icons.receipt),

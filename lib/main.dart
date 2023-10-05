@@ -45,6 +45,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (config(context: context).getElse("early_loading", true)) {
+      earlyLoading(context);
+    }
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         key: globalApplicationKey,

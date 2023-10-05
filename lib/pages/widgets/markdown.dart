@@ -27,13 +27,13 @@ var loading = Dialog(
   ),
 );
 
-Widget asyncMarkdownBody(String resource) {
+Widget asyncMarkdownBody(String resource, {BuildContext? context}) {
   var fb = FutureBuilder(
     future: rootBundle.loadString(resource),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
-        var mdwd = markdownBodyString(snapshot.data!);
-        ApplicationBus.instance()
+        var mdwd = markdownBodyString(snapshot.data!, context: context);
+        ApplicationBus.instance(context: context)
             .updateToHolder("mdwidget-resource:$resource", mdwd);
         return mdwd;
       } else {
@@ -42,37 +42,27 @@ Widget asyncMarkdownBody(String resource) {
     },
   );
 
-  if (config().getElse("page_cached", true)) {
-    return ApplicationBus.instance()
+  if (config(context: context).getElse("page_cached", true)) {
+    return ApplicationBus.instance(context: context)
         .getfromHolderElse("mdwidget-resource:$resource", fb);
   }
   return fb;
 }
 
-Widget markdownBodyString(String data) {
-  var fb = FutureBuilder(
-    future: Future.value(data),
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        var mdswd = Markdown(
-          data: snapshot.data!,
-          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              textScaleFactor:
-                  config(context: context).getElse("font_scale", 1.0)),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-        );
-        ApplicationBus.instance()
-            .updateToHolder("mdwidget-string:$data", mdswd);
-        return mdswd;
-      } else {
-        return loading;
-      }
-    },
+Widget markdownBodyString(String data, {BuildContext? context}) {
+  var defst = context == null
+      ? MarkdownStyleSheet()
+      : MarkdownStyleSheet.fromTheme(Theme.of(context));
+  return Markdown(
+    data: data,
+    styleSheet: defst.copyWith(
+        textScaleFactor: config(context: context).getElse("font_scale", 1.0)),
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
   );
-  if (config().getElse("page_cached", true)) {
-    return ApplicationBus.instance()
-        .getfromHolderElse("mdwidget-string:$data", fb);
-  }
-  return fb;
+}
+
+void earlyLoading(BuildContext context) {
+  asyncMarkdownBody("resource/text/home.md", context: context);
+  asyncMarkdownBody("resource/text/editor.md", context: context);
 }
