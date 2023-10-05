@@ -28,25 +28,16 @@ var loading = Dialog(
 );
 
 Widget asyncMarkdownBody(String resource, {BuildContext? context}) {
-  var fb = FutureBuilder(
+  return FutureBuilder(
     future: rootBundle.loadString(resource),
     builder: (context, snapshot) {
       if (snapshot.hasData) {
-        var mdwd = markdownBodyString(snapshot.data!, context: context);
-        ApplicationBus.instance(context: context)
-            .updateToHolder("mdwidget-resource:$resource", mdwd);
-        return mdwd;
+        return markdownBodyString(snapshot.data!, context: context);
       } else {
         return loading;
       }
     },
   );
-
-  if (config(context: context).getElse("page_cached", true)) {
-    return ApplicationBus.instance(context: context)
-        .getfromHolderElse("mdwidget-resource:$resource", fb);
-  }
-  return fb;
 }
 
 Widget markdownBodyString(String data, {BuildContext? context}) {
@@ -60,9 +51,4 @@ Widget markdownBodyString(String data, {BuildContext? context}) {
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
   );
-}
-
-void earlyLoading(BuildContext context) {
-  asyncMarkdownBody("resource/text/home.md", context: context);
-  asyncMarkdownBody("resource/text/editor.md", context: context);
 }

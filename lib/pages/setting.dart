@@ -93,32 +93,6 @@ class _SettingState extends State<Setting> {
                         .writeKeySync("fold_after_chose", v);
                   })),
         ),
-        ListTile(
-          leading: const Icon(Icons.cached),
-          title:
-              const Text("页面缓存", style: TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: const Text("Page Cached",
-              style: TextStyle(fontWeight: FontWeight.w500)),
-          trailing: Switch(
-            onChanged: (value) => setState(() {
-              config(context: context).writeKeySync("page_cached", value);
-            }),
-            value: config(context: context).getOrWrite("page_cached", true),
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.ac_unit),
-          title: const Text("页面预缓存",
-              style: TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: const Text("Early Loading",
-              style: TextStyle(fontWeight: FontWeight.w500)),
-          trailing: Switch(
-            onChanged: (value) => setState(() {
-              config(context: context).writeKeySync("early_loading", value);
-            }),
-            value: config(context: context).getOrWrite("early_loading", true),
-          ),
-        ),
         const Divider(),
         const ListTile(
             leading: Icon(Icons.receipt),
