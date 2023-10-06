@@ -44,7 +44,8 @@ class _EatWhatState extends State<EatWhat> {
                   style: TextStyle(fontWeight: FontWeight.w700),
                 )),
           ],
-        )
+        ),
+        const SizedBox(height: 40),
       ]),
     );
   }
