@@ -169,7 +169,10 @@ class _Editor extends State<Editor> {
                       eateryList(context: context).data!.add(Eatery());
                       eateryList(context: context).sync();
                     }),
-                child: const Text("添加"))
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.add), Text("添加")],
+                ))
           ],
         ),
         const SizedBox(

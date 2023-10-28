@@ -13,6 +13,7 @@ import 'package:eatincczu/pages/widgets/markdown.dart';
 import 'package:eatincczu/pages/setting.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
@@ -27,12 +28,11 @@ void main() async {
   }
   EateryList eateryList;
   File eatryfile = File("${await getPlatPath()}/eaterylist.json");
-  if (await eatryfile.exists()) {
-    eateryList = await EateryList.fromFile(eatryfile);
-  } else {
-    eateryList = EateryList();
-    await eatryfile.writeAsString(EateryList().encode());
+  if (!await eatryfile.exists()) {
+    await eatryfile.writeAsString(
+        await rootBundle.loadString("resource/eaterylist.json.default"));
   }
+  eateryList = await EateryList.fromFile(eatryfile);
   runApp(Provider<ApplicationBus>.value(
     value: ApplicationBus(await createConfig(), await createLogger(),
         eateryList: eateryList),

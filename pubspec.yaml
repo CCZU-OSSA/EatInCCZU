@@ -75,6 +75,7 @@ flutter:
     - resource/images/github.png
     - resource/images/mystia.png
     - resource/images/appicon.png
+    - resource/eaterylist.json.default
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
