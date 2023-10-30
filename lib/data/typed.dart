@@ -13,6 +13,10 @@ abstract class JsonSerializable {
   String encode() {
     return jsonEncode(toMap());
   }
+
+  bool equal(JsonSerializable rhs) {
+    return rhs.encode() == encode();
+  }
 }
 
 ///```json
@@ -173,6 +177,9 @@ void setInfos(Eatery eatery) {
 }
 
 DisplayInfo getDisplayInfo({List<PanelInfo>? infos, Function? callback}) {
+  if (_eatery.equal(Eatery())) {
+    setInfos(eateryList().getRandomEatry());
+  }
   infos ??= _infos;
   return DisplayInfo(
       ExpansionPanelList(
